@@ -62,11 +62,11 @@ func RawAddr(addr string) (buf []byte, err error) {
 func DialWithRawAddr(rawaddr []byte, server string, cipher *Cipher) (c *Conn, err error) {
 	var conn net.Conn
 	var err error
-	if _, ok = os.LookupEnv("LESMI_HTTP_PROXY") ; ok {
-		conn, err := net.Dial("tcp", os.Getenv("LESMI_HTTP_PROXY"))
-		conn.Write([]byte{"CONNECT " + server + " HTTP/1.0\r\n\r\n"})
+	if value, ok := os.LookupEnv("LESMI_HTTP_PROXY"); ok {
+		conn, err = net.Dial("tcp", value)
+		conn.Write([]byte("CONNECT " + server + " HTTP/1.0\r\n\r\n"))
 	} else {
-		conn, err := net.Dial("tcp", server)
+		conn, err = net.Dial("tcp", server)
 	}
 	if err != nil {
 		return
