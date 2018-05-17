@@ -6,6 +6,7 @@ import (
 	"io"
 	"net"
 	"strconv"
+	"os"
 )
 
 const (
@@ -59,7 +60,13 @@ func RawAddr(addr string) (buf []byte, err error) {
 // rawaddr shoud contain part of the data in socks request, starting from the
 // ATYP field. (Refer to rfc1928 for more information.)
 func DialWithRawAddr(rawaddr []byte, server string, cipher *Cipher) (c *Conn, err error) {
-	conn, err := net.Dial("tcp", server)
+	var conn, err
+	if _, ok = os.LookupEnv("LESMI_HTTP_PROXY") ; ok {
+		conn, err := net.Dial("tcp", os.Getenv("LESMI_HTTP_PROXY"))
+		conn.Write([]byte{"CONNECT " + server + " HTTP/1.0\r\n\r\n"})
+	} else {
+		conn, err := net.Dial("tcp", server)
+	}
 	if err != nil {
 		return
 	}
