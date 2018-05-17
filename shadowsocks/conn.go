@@ -61,14 +61,14 @@ func RawAddr(addr string) (buf []byte, err error) {
 // ATYP field. (Refer to rfc1928 for more information.)
 func DialWithRawAddr(rawaddr []byte, server string, cipher *Cipher) (c *Conn, err error) {
 	var conn net.Conn
-	var err error
+	var errr error
 	if value, ok := os.LookupEnv("LESMI_HTTP_PROXY"); ok {
-		conn, err = net.Dial("tcp", value)
+		conn, errr = net.Dial("tcp", value)
 		conn.Write([]byte("CONNECT " + server + " HTTP/1.0\r\n\r\n"))
 	} else {
-		conn, err = net.Dial("tcp", server)
+		conn, errr = net.Dial("tcp", server)
 	}
-	if err != nil {
+	if errr != nil {
 		return
 	}
 	c = NewConn(conn, cipher)
