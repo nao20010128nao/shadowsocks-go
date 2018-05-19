@@ -67,9 +67,9 @@ func DialWithRawAddr(rawaddr []byte, server string, cipher *Cipher) (c *Conn, er
 		conn, errr = net.Dial("tcp", value)
 		conn.Write([]byte("CONNECT " + server + " HTTP/1.0\r\n\r\n"))
 		bufReader := bufio.NewReader(conn)
-		// server not using CRLF? why not say fuck for that!
-		bufReader.ReadBytes([]byte("\r\n"))
-		bufReader.ReadBytes([]byte("\r\n"))
+		// servers not using CRLF? why not say fuck for that!
+		bufReader.ReadBytes('\n')
+		bufReader.ReadBytes('\n')
 	} else {
 		conn, errr = net.Dial("tcp", server)
 	}
