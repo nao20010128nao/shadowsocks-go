@@ -1,15 +1,8 @@
-# shadowsocks-go
-
-Current version: 1.2.1 [![Build Status](https://travis-ci.org/shadowsocks/shadowsocks-go.png?branch=master)](https://travis-ci.org/shadowsocks/shadowsocks-go)
+# OYAMA NATIONAL COLLEGE OF TECHNOLOGY MUST STOP MITM ATTACKING FOR SSH PORT RIGHT NOW
 
 shadowsocks-go is a lightweight tunnel proxy which can help you get through firewalls. It is a port of [shadowsocks](https://github.com/clowwindy/shadowsocks).
 
-The protocol is compatible with the origin shadowsocks (if both have been upgraded to the latest version).
-
-**Note `server_password` option syntax changed in 0.6.2, the client now connects to servers in the order specified in the config.**
-
-**Please develop on the latest develop branch if you want to send pull request.**
-
+This is a patched version to support HTTP proxy for the Internet side.     
 # Install
 
 Download precompiled binarys from the [release page](https://github.com/shadowsocks/shadowsocks-go/releases). (All compiled with cgo disabled, except the mac version.)
@@ -18,9 +11,9 @@ You can also install from source (assume you have go installed):
 
 ```
 # on server
-go get github.com/shadowsocks/shadowsocks-go/cmd/shadowsocks-server
+go get github.com/nao20010128nao/shadowsocks-go/cmd/shadowsocks-server
 # on client
-go get github.com/shadowsocks/shadowsocks-go/cmd/shadowsocks-local
+go get github.com/nao20010128nao/shadowsocks-go/cmd/shadowsocks-local
 ```
 
 It's recommended to disable cgo when compiling shadowsocks-go. This will prevent the go runtime from creating too many threads for dns lookup.
@@ -48,6 +41,13 @@ On client, run `shadowsocks-local`. Change proxy settings of your browser to
 ```
 SOCKS5 127.0.0.1:local_port
 ```
+
+You can use HTTP proxy with the following way:
+
+```
+LESMI_HTTP_PROXY=<server_host>:<server_port> shadowsocks-local ...
+```
+
 
 ## About encryption methods
 
