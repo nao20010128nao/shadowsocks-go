@@ -1,12 +1,13 @@
 package shadowsocks
 
 import (
+	"bufio"
 	"encoding/binary"
 	"fmt"
 	"io"
 	"net"
-	"strconv"
 	"os"
+	"strconv"
 )
 
 const (
@@ -65,6 +66,10 @@ func DialWithRawAddr(rawaddr []byte, server string, cipher *Cipher) (c *Conn, er
 	if value, ok := os.LookupEnv("LESMI_HTTP_PROXY"); ok {
 		conn, errr = net.Dial("tcp", value)
 		conn.Write([]byte("CONNECT " + server + " HTTP/1.0\r\n\r\n"))
+		bufReader := bufio.NewReader(conn)
+		// server not using CRLF? why not say fuck for that!
+		bufReader.ReadBytes([]byte("\r\n"))
+		bufReader.ReadBytes([]byte("\r\n"))
 	} else {
 		conn, errr = net.Dial("tcp", server)
 	}
