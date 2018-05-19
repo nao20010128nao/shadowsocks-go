@@ -1,7 +1,6 @@
 package shadowsocks
 
 import (
-	"bufio"
 	"encoding/binary"
 	"fmt"
 	"io"
@@ -57,6 +56,16 @@ func RawAddr(addr string) (buf []byte, err error) {
 	return
 }
 
+func SkipLine(reader io.Reader) {
+	buf := make([]byte, 1)
+	for {
+		n, err := reader.Read(buf)
+		if n == 1 && err != nil {
+			break
+		}
+	}
+}
+
 // This is intended for use by users implementing a local socks proxy.
 // rawaddr shoud contain part of the data in socks request, starting from the
 // ATYP field. (Refer to rfc1928 for more information.)
@@ -65,11 +74,11 @@ func DialWithRawAddr(rawaddr []byte, server string, cipher *Cipher) (c *Conn, er
 	var errr error
 	if value, ok := os.LookupEnv("LESMI_HTTP_PROXY"); ok {
 		conn, errr = net.Dial("tcp", value)
+		// CONNECT is ok; who said that I am doing a plain HTTP request?
 		conn.Write([]byte("CONNECT " + server + " HTTP/1.0\r\n\r\n"))
-		bufReader := bufio.NewReader(conn)
 		// servers not using CRLF? why not say fuck for that!
-		bufReader.ReadBytes('\n')
-		bufReader.ReadBytes('\n')
+		SkipLine(conn)
+		SkipLine(conn)
 	} else {
 		conn, errr = net.Dial("tcp", server)
 	}
